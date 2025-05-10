@@ -1,8 +1,6 @@
 package com.chip8.model.core.instruction;
 
-import com.chip8.api.core.buffer.Buffer;
 import com.chip8.api.core.register.IndexRegister;
-import com.chip8.api.core.register.ProgramCounter;
 import com.chip8.api.core.register.VRegister;
 import com.chip8.model.core.sprite.SpritesEnum;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,16 +15,12 @@ public class SetILocationOfSpriteInstruction extends InstructionAbstract {
 
     private final VRegister vRegister;
 
-    private final Buffer displayBuffer;
-
     private final IndexRegister indexRegister;
 
     @Autowired
-    public SetILocationOfSpriteInstruction(final ProgramCounter pc, final VRegister vRegister, final Buffer displayBuffer,
-                                           final IndexRegister indexRegister) {
+    public SetILocationOfSpriteInstruction(final VRegister vRegister, final IndexRegister indexRegister) {
         super(COMMAND_REGEX);
         this.vRegister = vRegister;
-        this.displayBuffer = displayBuffer;
         this.indexRegister = indexRegister;
     }
 

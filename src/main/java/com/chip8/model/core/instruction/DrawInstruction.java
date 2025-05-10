@@ -37,7 +37,6 @@ public class DrawInstruction extends InstructionAbstract {
         final Integer[] sprite = this.memoryRam.read(this.indexRegister.get(), this.indexRegister.get() + HexFormat.fromHexDigits(opcode.substring(3)));
 
         this.graphicController.display(vx, vy, sprite);
-
     }
 
 }

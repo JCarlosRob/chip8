@@ -1,6 +1,5 @@
 package com.chip8.model.core.instruction;
 
-import com.chip8.api.core.register.ProgramCounter;
 import com.chip8.api.core.register.TimerRegister;
 import com.chip8.api.core.register.VRegister;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,7 @@ public class SetSoundTimerInstruction extends InstructionAbstract {
     private final TimerRegister soundTimerRegister;
 
     @Autowired
-    public SetSoundTimerInstruction(final ProgramCounter pc, final VRegister vRegister, final TimerRegister soundTimerRegister) {
+    public SetSoundTimerInstruction(final VRegister vRegister, final TimerRegister soundTimerRegister) {
         super(COMMAND_REGEX);
         this.vRegister = vRegister;
         this.soundTimerRegister = soundTimerRegister;

@@ -20,9 +20,9 @@ public class ScreenHandler implements Screen {
 
     private final PrimaryStage primaryStage;
 
-    private Scene scene;
-
     private final Buffer displayBuffer;
+
+    private Scene scene;
 
     public ScreenHandler(final PrimaryStage primaryStage, final Buffer displayBuffer) {
         this.primaryStage = primaryStage;

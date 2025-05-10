@@ -4,7 +4,6 @@ import com.chip8.api.Chip8;
 import com.chip8.api.core.Cpu;
 import com.chip8.api.core.Loader;
 import com.chip8.model.screen.ScreenHandler;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -16,13 +15,13 @@ public class Chip8Handler implements Chip8 {
 
     private final Cpu cpu;
 
-    @Autowired
-    private ScreenHandler screenHandler;
+    private final ScreenHandler screenHandler;
 
 
-    public Chip8Handler(final Loader loader, final Cpu cpu) {
+    public Chip8Handler(final Loader loader, final Cpu cpu, final ScreenHandler screenHandler) {
         this.loader = loader;
         this.cpu = cpu;
+        this.screenHandler = screenHandler;
     }
 
 

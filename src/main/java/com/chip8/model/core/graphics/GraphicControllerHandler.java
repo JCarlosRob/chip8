@@ -41,18 +41,17 @@ public class GraphicControllerHandler implements GraphicController {
         return Arrays.stream(data).map(Integer::toBinaryString).map(this::spriteSectionNormalizer).toArray(String[]::new);
     }
 
+    private String spriteSectionNormalizer(final String spriteSection) {
+        final String zeros = IntStream.range(0, 8 - spriteSection.length()).mapToObj(value -> "0").collect(Collectors.joining());
+        return zeros + spriteSection;
+    }
+
     private void loadSprite(final Integer x, final Integer y, final String[] sprite) {
         IntStream.range(0, sprite.length)
                 .forEach(i -> {
                     final Integer[] spriteSection = Arrays.stream(sprite[i].split("")).map(Integer::valueOf).toArray(Integer[]::new);
                     this.loadSpriteSection(x, y + i, spriteSection);
                 });
-    }
-
-    private void calculateCollision(final Integer byteSprite, final Integer byteDisplay) {
-        if (byteSprite == 1 && byteDisplay == 1) {
-            this.vRegister.set(15, 1);
-        }
     }
 
     private void loadSpriteSection(final Integer x, final Integer y, final Integer[] spriteSection) {
@@ -63,8 +62,9 @@ public class GraphicControllerHandler implements GraphicController {
         });
     }
 
-    private String spriteSectionNormalizer(final String spriteSection) {
-        final String zeros = IntStream.range(0, 8 - spriteSection.length()).mapToObj(value -> "0").collect(Collectors.joining());
-        return zeros + spriteSection;
+    private void calculateCollision(final Integer byteSprite, final Integer byteDisplay) {
+        if (byteSprite == 1 && byteDisplay == 1) {
+            this.vRegister.set(15, 1);
+        }
     }
 }
