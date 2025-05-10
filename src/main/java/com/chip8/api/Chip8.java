@@ -6,4 +6,6 @@ public interface Chip8 {
 
     void start() throws IOException, InterruptedException;
 
+    void stop();
+
 }

@@ -19,15 +19,14 @@ public class MemoryStackHandler implements MemoryStack {
 
     @Override
     public void push(final Integer data) {
-        this.sp.increase();
         this.memoryStack.write(this.sp.get(), data);
+        this.sp.increase();
     }
 
     @Override
     public Integer pop() {
-        final Integer data = this.memoryStack.read(this.sp.get());
         this.sp.decrement();
-        return data;
+        return this.memoryStack.read(this.sp.get());
     }
 
 }

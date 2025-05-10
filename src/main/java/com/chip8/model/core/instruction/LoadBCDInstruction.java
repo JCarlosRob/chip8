@@ -1,5 +1,6 @@
 package com.chip8.model.core.instruction;
 
+import com.chip8.api.core.memory.Memory;
 import com.chip8.api.core.register.IndexRegister;
 import com.chip8.api.core.register.VRegister;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +18,14 @@ public class LoadBCDInstruction extends InstructionAbstract {
 
     private final IndexRegister indexRegister;
 
+    private final Memory memoryRam;
+
     @Autowired
-    public LoadBCDInstruction(final VRegister vRegister, final IndexRegister indexRegister) {
+    public LoadBCDInstruction(final VRegister vRegister, final IndexRegister indexRegister, final Memory memoryRam) {
         super(COMMAND_REGEX);
         this.vRegister = vRegister;
         this.indexRegister = indexRegister;
+        this.memoryRam = memoryRam;
     }
 
     @Override
@@ -31,7 +35,7 @@ public class LoadBCDInstruction extends InstructionAbstract {
 
         IntStream.range(0, 3).forEach(i -> {
             final String digit = vDataString.substring(i, i + 1);
-            this.vRegister.set(Integer.valueOf(digit), this.indexRegister.get() + i);
+            this.memoryRam.write(this.indexRegister.get() + i, Integer.valueOf(digit));
         });
     }
 

@@ -57,7 +57,7 @@ public class DisplayBuffer implements Buffer {
 
     @Override
     public Integer[][] get() {
-        return this.display;
+        return this.display.clone();
     }
 
     @Override

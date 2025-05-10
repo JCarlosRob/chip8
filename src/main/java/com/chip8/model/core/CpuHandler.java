@@ -1,22 +1,20 @@
 package com.chip8.model.core;
 
 import com.chip8.api.core.Cpu;
-import com.chip8.api.core.buffer.Buffer;
 import com.chip8.api.core.instruction.Instruction;
 import com.chip8.api.core.memory.Memory;
-import com.chip8.api.core.register.IndexRegister;
 import com.chip8.api.core.register.ProgramCounter;
 import com.chip8.api.core.register.TimerRegister;
-import com.chip8.api.core.register.VRegister;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HexFormat;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Component
 public class CpuHandler implements Cpu {
@@ -27,38 +25,29 @@ public class CpuHandler implements Cpu {
 
     private final Memory memoryRam;
 
-    @Autowired
-    private Buffer displayBuffer;
+    private final TimerRegister delayTimerRegister;
 
-    @Autowired
-    private IndexRegister indexRegister;
+    private ScheduledExecutorService executor;
 
-    @Autowired
-    private VRegister vRegister;
-
-    @Autowired
-    private TimerRegister delayTimerRegister;
-
-    public CpuHandler(final List<Instruction> instructions, final ProgramCounter pc, final Memory memoryRam) {
+    public CpuHandler(final List<Instruction> instructions, final ProgramCounter pc, final Memory memoryRam, final TimerRegister delayTimerRegister) {
         this.instructions = instructions;
         this.pc = pc;
         this.memoryRam = memoryRam;
+        this.delayTimerRegister = delayTimerRegister;
     }
 
     @Override
     public void run() throws IOException, InterruptedException {
-        while (true) {
-            final String opcode = this.nextOpcode();
-            this.instructions.stream().filter(instruction -> instruction.isExecutable(opcode))
-                    .findFirst()
-                    .ifPresent(instruction -> instruction.run(opcode));
-
-            if (this.delayTimerRegister.get() > 0) {
-                this.delayTimerRegister.set(0);
-            }
-
-            //Thread.sleep(16);
+        if (this.executor == null) {
+            this.executor = Executors.newSingleThreadScheduledExecutor();
         }
+
+        this.executor.scheduleAtFixedRate(() -> {
+            CpuHandler.this.executeOpcode(CpuHandler.this.nextOpcode());
+            if (CpuHandler.this.delayTimerRegister.get() > 0) {
+                CpuHandler.this.delayTimerRegister.set(0);
+            }
+        }, 0, 1_000_000 / 500, TimeUnit.MICROSECONDS);
     }
 
     private String nextOpcode() {
@@ -68,5 +57,17 @@ public class CpuHandler implements Cpu {
                 .map(integer -> HexFormat.of().toHexDigits(integer))
                 .map(s -> s.substring(s.length() - 2).toUpperCase())
                 .collect(Collectors.joining());
+    }
+
+    private void executeOpcode(final String opcode) {
+        this.instructions.stream()
+                .filter(instruction -> instruction.isExecutable(opcode))
+                .findFirst()
+                .ifPresent(instruction -> instruction.run(opcode));
+    }
+
+    @Override
+    public void stop() {
+        this.executor.shutdownNow();
     }
 }

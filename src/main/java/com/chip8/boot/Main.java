@@ -1,26 +1,10 @@
 package com.chip8.boot;
 
-import com.chip8.api.Chip8;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
+import com.chip8.configure.JFXConfigure;
 
-@SpringBootApplication
-@ComponentScan(basePackages = "com.chip8.*")
-public class Main implements CommandLineRunner {
-
-    @Autowired
-    private Chip8 chip8;
+public class Main {
 
     public static void main(final String[] args) {
-        SpringApplication.run(Main.class, args);
+        JFXConfigure.launch(JFXConfigure.class, args);
     }
-
-    @Override
-    public void run(final String... args) throws Exception {
-        this.chip8.start();
-    }
-
 }

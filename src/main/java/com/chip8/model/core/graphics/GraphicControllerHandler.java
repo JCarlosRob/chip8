@@ -6,7 +6,6 @@ import com.chip8.api.core.register.VRegister;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -32,12 +31,6 @@ public class GraphicControllerHandler implements GraphicController {
         this.restoreCollision();
         final String[] sprite = this.calculateSpriteToBeDisplayed(data);
         this.loadSprite(x, y, sprite);
-        try {
-            this.print();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
     }
 
     private void restoreCollision() {
@@ -57,7 +50,7 @@ public class GraphicControllerHandler implements GraphicController {
     }
 
     private void calculateCollision(final Integer byteSprite, final Integer byteDisplay) {
-        if (this.vRegister.get(15) == 0 && byteSprite == 1 && byteDisplay == 1) {
+        if (byteSprite == 1 && byteDisplay == 1) {
             this.vRegister.set(15, 1);
         }
     }
@@ -68,46 +61,10 @@ public class GraphicControllerHandler implements GraphicController {
             this.calculateCollision(displayValue, displayValue);
             this.displayBuffer.write(x + i, y, spriteSection[i] ^ displayValue);
         });
-
-
     }
 
     private String spriteSectionNormalizer(final String spriteSection) {
         final String zeros = IntStream.range(0, 8 - spriteSection.length()).mapToObj(value -> "0").collect(Collectors.joining());
         return zeros + spriteSection;
     }
-
-    private void print() throws IOException {
-        //Runtime.getRuntime().exec("cls");
-        try {
-            new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        System.out.println("   0         1         2         3         4         5         6   ");
-        System.out.println("   0123456789012345678901234567890123456789012345678901234567890123");
-        System.out.println("   ################################################################");
-        IntStream.range(0, this.displayBuffer.get()[0].length).forEach(y -> {
-            if (y<10) {
-                System.out.print("0" + y + "#");
-            } else {
-                System.out.print(y + "#");
-            }
-
-            IntStream.range(0, this.displayBuffer.get().length).forEach(x ->
-                    System.out.print(String.valueOf(this.displayBuffer.get()[x][y]).replace("0", " ")));
-            System.out.print("#");
-            System.out.println();
-        });
-        System.out.println("   ################################################################");
-
-//            Arrays.stream(this.displayBuffer.get()).forEach(integers -> System.out.println(Arrays.toString(integers)));
-        System.out.println();
-        System.out.println();
-    }
-
 }
