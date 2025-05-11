@@ -25,7 +25,8 @@ public class WaitForKeyPressInstruction extends InstructionAbstract {
 
     @Override
     public void execute(final String opcode) {
-        final String keyPressed = this.keyboard.read();
+        final String keyPressed = this.keyboard.readKeyPressed().orElse("");
         this.vRegister.set(HexFormat.fromHexDigits(opcode.substring(1, 2)), HexFormat.fromHexDigits(keyPressed));
+        this.keyboard.reset();
     }
 }

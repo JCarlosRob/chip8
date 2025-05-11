@@ -7,7 +7,6 @@ import com.chip8.api.core.register.ProgramCounter;
 import com.chip8.api.core.register.TimerRegister;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.HexFormat;
 import java.util.List;
@@ -37,7 +36,7 @@ public class CpuHandler implements Cpu {
     }
 
     @Override
-    public void run() throws IOException, InterruptedException {
+    public void run() throws InterruptedException {
         if (this.executor == null) {
             this.executor = Executors.newSingleThreadScheduledExecutor();
         }

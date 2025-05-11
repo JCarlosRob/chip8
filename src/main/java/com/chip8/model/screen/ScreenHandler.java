@@ -3,6 +3,7 @@ package com.chip8.model.screen;
 import com.chip8.api.core.buffer.Buffer;
 import com.chip8.api.screen.Screen;
 import com.chip8.configure.PrimaryStage;
+import com.chip8.model.keyboard.KeyboardHandler;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -22,29 +23,25 @@ public class ScreenHandler implements Screen {
 
     private final Buffer displayBuffer;
 
-    private Scene scene;
+    private final KeyboardHandler keyboardHandler;
 
-    public ScreenHandler(final PrimaryStage primaryStage, final Buffer displayBuffer) {
+    public ScreenHandler(final PrimaryStage primaryStage, final Buffer displayBuffer, final KeyboardHandler keyboardHandler) {
         this.primaryStage = primaryStage;
         this.displayBuffer = displayBuffer;
+        this.keyboardHandler = keyboardHandler;
     }
 
     @Override
     public void init() {
-        this.createScene();
-        this.startUpdateScene();
+        final Scene scene = this.createScene();
+        this.startUpdateScene(scene);
 
         this.primaryStage.getStage().setTitle("Chip 8 Emulator");
-        this.primaryStage.getStage().setScene(this.scene);
+        this.primaryStage.getStage().setScene(scene);
         this.primaryStage.getStage().show();
     }
 
-    @Override
-    public void update() {
-
-    }
-
-    private void createScene() {
+    private Scene createScene() {
         final Pane pane = new Pane();
         pane.setStyle("-fx-background-color: black;");
 
@@ -52,10 +49,13 @@ public class ScreenHandler implements Screen {
         square.setFill(Color.WHITE);
         pane.getChildren().add(square);
 
-        this.scene = new Scene(pane, 64 * 10, 32 * 10);
+        final Scene scene = new Scene(pane, 64 * 10, 32 * 10);
+        scene.setOnKeyPressed(event -> this.keyboardHandler.setKeyPressed(event.getCode().getChar()));
+
+        return scene;
     }
 
-    private void startUpdateScene() {
+    private void startUpdateScene(final Scene scene) {
         new AnimationTimer() {
             @Override
             public void handle(final long l) {
@@ -76,7 +76,7 @@ public class ScreenHandler implements Screen {
                 });
 
                 final StackPane root = new StackPane(canvas);
-                ScreenHandler.this.scene.setRoot(root);
+                scene.setRoot(root);
             }
         }.start();
     }

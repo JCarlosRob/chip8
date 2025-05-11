@@ -17,7 +17,6 @@ public class Chip8Handler implements Chip8 {
 
     private final ScreenHandler screenHandler;
 
-
     public Chip8Handler(final Loader loader, final Cpu cpu, final ScreenHandler screenHandler) {
         this.loader = loader;
         this.cpu = cpu;

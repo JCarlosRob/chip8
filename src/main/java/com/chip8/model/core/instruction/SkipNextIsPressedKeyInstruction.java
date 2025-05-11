@@ -31,9 +31,10 @@ public class SkipNextIsPressedKeyInstruction extends InstructionAbstract {
     public void execute(final String opcode) {
         final Integer data = this.vRegister.get(HexFormat.fromHexDigits(opcode.substring(1, 2)));
         final String dataHex = HexFormat.of().toHexDigits(data).substring(7);
-        final String keyPressed = this.keyboard.read();
+        final String keyPressed = this.keyboard.readKeyPressed().orElse("");
         if (dataHex.equalsIgnoreCase(keyPressed)) {
             this.pc.next(2);
+            this.keyboard.reset();
         }
     }
 }

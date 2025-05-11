@@ -1,7 +1,12 @@
 package com.chip8.api.keyboard;
 
+import java.util.Optional;
+
 public interface Keyboard {
 
-    String read();
+    void setKeyPressed(final String keyPressed);
 
+    Optional<String> readKeyPressed();
+
+    void reset();
 }

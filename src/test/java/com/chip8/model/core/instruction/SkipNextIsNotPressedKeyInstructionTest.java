@@ -12,6 +12,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.HexFormat;
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 class SkipNextIsNotPressedKeyInstructionTest {
@@ -61,7 +62,7 @@ class SkipNextIsNotPressedKeyInstructionTest {
     @Test
     void run_thePressedKeyIsEquals_invokeNext_test() {
         Mockito.when(this.vRegister.get(HexFormat.fromHexDigits("A"))).thenReturn(10);
-        Mockito.when(this.keyboard.read()).thenReturn("A");
+        Mockito.when(this.keyboard.readKeyPressed()).thenReturn(Optional.of("A"));
         this.skipNextIsNotPressedKeyInstruction.run("EA9E");
         Mockito.verifyNoInteractions(this.pc);
     }
@@ -69,7 +70,7 @@ class SkipNextIsNotPressedKeyInstructionTest {
     @Test
     void run_thePressedKeyIsNotEquals_notInvokeNext_test() {
         Mockito.when(this.vRegister.get(HexFormat.fromHexDigits("A"))).thenReturn(10);
-        Mockito.when(this.keyboard.read()).thenReturn("B");
+        Mockito.when(this.keyboard.readKeyPressed()).thenReturn(Optional.of("B"));
         this.skipNextIsNotPressedKeyInstruction.run("EA93");
         Mockito.verify(this.pc, Mockito.times(1)).next(2);
     }

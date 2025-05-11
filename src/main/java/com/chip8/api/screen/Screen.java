@@ -4,6 +4,4 @@ public interface Screen {
 
     void init();
 
-    void update();
-
 }

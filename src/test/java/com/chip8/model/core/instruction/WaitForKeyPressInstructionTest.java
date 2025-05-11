@@ -10,6 +10,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 @ExtendWith(MockitoExtension.class)
 class WaitForKeyPressInstructionTest {
 
@@ -54,7 +56,7 @@ class WaitForKeyPressInstructionTest {
 
     @Test
     void run_test() {
-        Mockito.when(this.keyboard.read()).thenReturn("B");
+        Mockito.when(this.keyboard.readKeyPressed()).thenReturn(Optional.of("B"));
         this.waitForKeyPressInstruction.run("FA0A");
         Mockito.verify(this.vRegister, Mockito.times(1)).set(10, 11);
     }

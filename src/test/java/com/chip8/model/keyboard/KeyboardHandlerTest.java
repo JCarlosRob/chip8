@@ -26,7 +26,7 @@ public class KeyboardHandlerTest {
         final ByteArrayInputStream testIn = new ByteArrayInputStream("A".getBytes());
         System.setIn(testIn);
         Mockito.when(this.keyboardConfigure.getKeys()).thenReturn(Collections.singletonList("A"));
-        Assertions.assertEquals("A", this.keyboardHandler.read());
+        Assertions.assertEquals("A", this.keyboardHandler.readKeyPressed());
     }
 
     @Test
@@ -34,7 +34,7 @@ public class KeyboardHandlerTest {
         final ByteArrayInputStream testIn = new ByteArrayInputStream("C\nA".getBytes());
         System.setIn(testIn);
         Mockito.when(this.keyboardConfigure.getKeys()).thenReturn(Collections.singletonList("A"));
-        Assertions.assertEquals("A", this.keyboardHandler.read());
+        Assertions.assertEquals("A", this.keyboardHandler.readKeyPressed());
     }
 
 }
